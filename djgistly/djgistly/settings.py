@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,7 +40,45 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.sites",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    'accounts',
+    'api',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
+
+SITE_ID = 1
+
+# ACCOUNT_SIGNUP_FIELDS = ["username*", "email"]
+
+# ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_AUTHENTICATION_METHOD = "username"
+# ACCOUNT_UNIQUE_EMAIL = False
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "SCOPE": ["repo", "read:user"],
+        "AUTH_PARAMS": {"allow_signup": "true"},
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'djgistly.urls'
@@ -120,3 +162,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SOCIALACCOUNT_PROVIDERS["github"]["APP"] = {
+    "client_id": os.getenv("GITHUB_OAUTH_CLIENT_ID"),
+    "secret": os.getenv("GITHUB_OAUTH_SECRET"),
+}
