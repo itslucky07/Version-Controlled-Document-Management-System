@@ -1,8 +1,6 @@
-from django.urls import path, include
+from django.urls import path
+from .views import fetch_token
 
 urlpatterns = [
-    # path("", include("dj_rest_auth.urls")),
-    # path("accounts/", include("allauth.urls")),
-    # path("registration/", include("dj_rest_auth.registration.urls")),
-    # path("github/", include("allauth.socialaccount.urls")),
+    path("token/", fetch_token, name="token"),
 ]

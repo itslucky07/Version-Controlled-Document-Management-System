@@ -51,7 +51,10 @@ INSTALLED_APPS = [
     "dj_rest_auth.registration",
     'accounts',
     'api',
+    'corsheaders',
 ]
+
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:5173/profile'
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -60,6 +63,7 @@ AUTHENTICATION_BACKENDS = (
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
 }
@@ -81,6 +85,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -89,6 +94,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
 ]
 
 ROOT_URLCONF = 'djgistly.urls'
@@ -168,3 +177,16 @@ SOCIALACCOUNT_PROVIDERS["github"]["APP"] = {
     "client_id": os.getenv("GITHUB_OAUTH_CLIENT_ID"),
     "secret": os.getenv("GITHUB_OAUTH_SECRET"),
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
+
+REST_AUTH_TOKEN_MODEL = "rest_framework.authtoken.models.Token"
+
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = False
